@@ -75,7 +75,7 @@ void MessageFieldGenerator::GenerateSlot(io::Printer* printer) const {
   printer->Print(
       variables_,
       "($name$\n"
-      " :writer (cl:setf $name$)\n"
+      " :accessor $name$\n"
       " :initform cl:nil\n"
       " :type (cl:or cl:null $package$::$type$))\n");
 }
@@ -103,19 +103,21 @@ void MessageFieldGenerator::GenerateOctetSize(io::Printer* printer) const {
 }
 
 void MessageFieldGenerator::GenerateAccessor(io::Printer* printer) const {
+  // These are for optional (as far as I know).
+
   // Message fields are lazily initialized the first time they are accessed.
-  printer->Print(
-      variables_,
-      "(cl:unless (cl:fboundp '$name$)\n"
-      "  (cl:defgeneric $name$ (proto)))\n"
-      "(cl:defmethod $name$ ((self $classname$))\n"
-      "  (cl:let ((result (cl:slot-value self '$name$)))\n"
-      "    (cl:when (cl:null result)\n"
-      "      (cl:setf result (cl:make-instance '$package$::$type$))\n"
-      "      (cl:setf (cl:slot-value self '$name$) result))\n"
-      "      (cl:setf (cl:ldb (cl:byte 1 $index$)"
-      " (cl:slot-value self '%has-bits%)) 1)\n"
-      "    result))\n");
+  // printer->Print(
+  //     variables_,
+  //     "(cl:unless (cl:fboundp '$name$)\n"
+  //     "  (cl:defgeneric $name$ (proto)))\n"
+  //     "(cl:defmethod $name$ ((self $classname$))\n"
+  //     "  (cl:let ((result (cl:slot-value self '$name$)))\n"
+  //     "    (cl:when (cl:null result)\n"
+  //     "      (cl:setf result (cl:make-instance '$package$::$type$))\n"
+  //     "      (cl:setf (cl:slot-value self '$name$) result))\n"
+  //     "      (cl:setf (cl:ldb (cl:byte 1 $index$)"
+  //     " (cl:slot-value self '%has-bits%)) 1)\n"
+  //     "    result))\n");
 }
 
 void MessageFieldGenerator::GenerateSerializeWithCachedSizes(
