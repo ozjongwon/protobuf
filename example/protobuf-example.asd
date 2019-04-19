@@ -1,5 +1,6 @@
 
 ;;;;    protobuf-example.asd
+(in-package #:asdf/user)
 
 (defsystem protobuf-example
   :name "Protocol Buffer Example"
