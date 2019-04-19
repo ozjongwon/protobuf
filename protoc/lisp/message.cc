@@ -32,6 +32,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <unordered_set>
 
 #include <google/protobuf/io/printer.h>
 #include <google/protobuf/io/coded_stream.h>
@@ -94,7 +95,7 @@ struct ExtensionRangeSorter {
 // (and also to protect against recursion).
 static bool HasRequiredFields(
     const Descriptor* type,
-    hash_set<const Descriptor*>* already_seen) {
+    std::unordered_set<const Descriptor*>* already_seen) {
   if (already_seen->count(type) > 0) {
     // Since the first occurrence of a required field causes the whole
     // function to return true, we can assume that if the type is already
@@ -126,7 +127,7 @@ static bool HasRequiredFields(
 }
 
 static bool HasRequiredFields(const Descriptor* type) {
-  hash_set<const Descriptor*> already_seen;
+  std::unordered_set<const Descriptor*> already_seen;
   return HasRequiredFields(type, &already_seen);
 }
 
